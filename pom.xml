@@ -25,6 +25,13 @@
 		    <artifactId>stanford-corenlp</artifactId>
 		    <version>3.7.0</version>
 		</dependency>
+		<dependency>
+		    <groupId>jaunt</groupId>
+		    <artifactId>com.jaunt</artifactId>
+		    <version>1.0</version>
+		    <scope>system</scope>
+		    <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/jaunt1.2.9.jar</systemPath>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>ExtractionServer</finalName>
