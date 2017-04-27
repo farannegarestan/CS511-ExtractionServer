@@ -61,7 +61,7 @@ public class ProcessorServlet extends HttpServlet {
 			userAgent.visit(url);
 			Elements links = userAgent.doc.findEvery("<a class=\""+linkClass+"\">");
 			for(Element link : links) 
-				titles.add(link.getAt("title")); 
+				titles.add(link.hasAttribute("title") ? link.getAt("title") : link.getText()); 
 			
 			// Tokenizing
 			ArrayList<List<CoreLabel>> titleTokens = new ArrayList<List<CoreLabel>>();
