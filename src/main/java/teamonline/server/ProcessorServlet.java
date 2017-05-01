@@ -47,10 +47,13 @@ public class ProcessorServlet extends HttpServlet {
 
 	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String serializedClassifier = "dell_first_25_data_ner-model.ser.gz";
+		//String serializedClassifier = "dell_first_25_data_ner-model.ser.gz";
+		String serializedClassifier = "nofilter_training_data_10000_ner-model.ser.gz";
+		//String serializedClassifier = "nofilter_training_data_first_150_ner-model.ser.gz";
 		System.out.println("Processing started...");
 		String url = request.getParameter("url");
 		String linkClass = request.getParameter("linkClass");
+		String position = request.getParameter("position");
 		UserAgent userAgent = new UserAgent();
 		List<String> titles = new ArrayList<String>();
 		
@@ -59,7 +62,11 @@ public class ProcessorServlet extends HttpServlet {
 		
 		try {
 			userAgent.visit(url);
-			Elements links = userAgent.doc.findEvery("<a class=\""+linkClass+"\">");
+			Elements links = null;
+			if (position.equals("anchor"))
+				links = userAgent.doc.findEvery("<a class=\""+linkClass+"\">");
+			else if (position.equals("div"))
+				links = userAgent.doc.findEvery("<div class=\""+linkClass+"\">").findEvery("<a>");
 			for(Element link : links) 
 				titles.add(link.hasAttribute("title") ? link.getAt("title") : link.getText()); 
 			
@@ -80,7 +87,7 @@ public class ProcessorServlet extends HttpServlet {
 			
 			AbstractSequenceClassifier<CoreLabel> classifier = CRFClassifier.getClassifier(serializedClassifier);
 			
-			for (int i=0; i < 3; i++ ) {
+			for (int i=0; i < titleTokens.size() && i < 3; i++ ) {
 				List<CoreLabel> out = classifier.classify(titleTokens.get(i));
 				Map<String, String> map = new HashMap<>();
 				for(CoreLabel lable: out) {
