@@ -47,8 +47,8 @@ public class ProcessorServlet extends HttpServlet {
 
 	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String serializedClassifier = "dell_first_25_data_ner-model.ser.gz";
-		//String serializedClassifier = "nofilter_training_data_10000_ner-model.ser.gz";
+		//String serializedClassifier = "dell_first_25_data_ner-model.ser.gz";
+		String serializedClassifier = "nofilter_training_data_10000_ner-model.ser.gz";
 		//String serializedClassifier = "nofilter_training_data_first_150_ner-model.ser.gz";
 		System.out.println("Processing started...");
 		String url = request.getParameter("url");
@@ -68,7 +68,7 @@ public class ProcessorServlet extends HttpServlet {
 			else if (position.equals("div"))
 				links = userAgent.doc.findEvery("<div class=\""+linkClass+"\">").findEvery("<a>");
 			for(Element link : links) 
-				titles.add(link.hasAttribute("title") ? link.getAt("title") : link.getText()); 
+				titles.add(link.hasAttribute("title") ? link.getAt("title").toLowerCase() : link.getText().toLowerCase()); 
 			
 			// Tokenizing
 			ArrayList<List<CoreLabel>> titleTokens = new ArrayList<List<CoreLabel>>();

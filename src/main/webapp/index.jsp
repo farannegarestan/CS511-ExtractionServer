@@ -26,7 +26,8 @@
 <% for (Map<String,String> row: values ) { %>
 <tr>
 	<% for (String column: columns ) { %>
-		<td><% out.print(row.getOrDefault(column, "N/A")); %>
+		<%String ColVal = row.getOrDefault(column, "N/A"); %>
+		<td class="<% out.print(column); %>"><span class="content"><% out.print(ColVal); %></span>
 			<div class="dropdown">
 			  <button class="btn btn-default btn-xs dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
 			    Correction
@@ -34,7 +35,7 @@
 			  </button>
 			  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" style="padding:10px; text-align: center;">
 			    <% for (String col: columns ) { %>
-					<a href="javascript:void(0);" onclick="sendFeedback();"><% out.print(col); %></a><br/>
+					<a href="javascript:void(0);" onclick="sendFeedback(this, '<% out.print(col); %>');"><% out.print(col); %></a><br/>
 				<%} %> 
 			  </ul>
 			</div>
@@ -44,10 +45,15 @@
 <%} %>
 </table>
 <script type="text/javascript">
-function sendFeedback() {
+function sendFeedback(location, right_col) {
 	$("#feedback").show(100, function() {
 		setTimeout(function() {$("#feedback").hide(100);} , 5000)
 	});
+	var current_element = $(location).closest("td").find("span.content")
+	var dest_element = $(location).closest("tr").find("td."+right_col+" span.content")
+	var current_text = current_element.text()
+	current_element.text("")
+	dest_element.html(dest_element.text() +" "+current_text)
 }
 </script>
 </body>
